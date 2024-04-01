@@ -1,9 +1,13 @@
 import css from "./Contact.module.css";
 import { AiFillContacts } from "react-icons/ai";
 import { AiFillPhone } from "react-icons/ai";
+import { useDispatch } from "react-redux";
+import { deleteContact } from "../../redux/contactsOps";
+import toast from 'react-hot-toast';
 
-const Contact = ({ contact: { name, number, id }, onDelete }) => {
-  const handleDelete = () => { onDelete(id); };
+const Contact = ({ contact: { name, number, id } }) => {
+  const dispatch = useDispatch();
+
   
   return (
     <>
@@ -16,7 +20,14 @@ const Contact = ({ contact: { name, number, id }, onDelete }) => {
           <p className={css.text}>{name}</p>
           <p className={css.text}>{number}</p>
         </div>
-        <button className={css.btn} onClick={handleDelete}>Delete</button>
+        <button className={css.btn} onClick={() => dispatch(deleteContact(id))
+        .unwrap()
+        .then(() => {
+        toast.success('Contact deleted');
+      })
+        .catch(() => {
+        toast.error('Error deleting contact');
+      })}>Delete</button>
       </li>
     </>
   );
